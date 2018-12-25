@@ -22,12 +22,13 @@ public:
         switch(type){
         case 1:
             arr_size = load_char_data(file_name, d);
-
+            break;
         case 2:
-            arr_size = load_char_data(file_name, d);
-
+            arr_size = load_int_data(file_name, d);
+            break;
         case 3:
             arr_size = load_char_data(file_name, d);
+            break;
         }
         return arr_size;
     }
@@ -153,6 +154,7 @@ int main()
                 case 3:
                     break;
                 }
+                fflush(stdin);
             }
         }
         else{
@@ -188,6 +190,8 @@ int main()
                 break;
 
             }
+            fflush(stdin);
+
         }
 
     }
