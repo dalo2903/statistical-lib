@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1545802257 source:c:\users\lenovo\documents\github\statistical-lib\main.cpp
+1545805810 source:c:\users\lenovo\documents\github\statistical-lib\main.cpp
 	<iostream>
 	<sstream>
 	<stdio.h>
 	<string>
 	<stdlib.h>
+	<vector>
 	<iomanip>
 

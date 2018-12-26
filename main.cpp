@@ -1,8 +1,9 @@
-#include <iostream>
+#include<iostream>
 #include<sstream>
 #include<stdio.h>
 #include<string>
-#include <stdlib.h>
+#include<stdlib.h>
+#include<vector>
 #include<iomanip>
 #define TYPE_CHAR 1
 #define TYPE_INT 2
@@ -27,35 +28,32 @@ public:
         }
         else return true;
     }
-    size_t load_char_data(string file_name, data *d){
-        size_t i = 0;
+    void load_char_data(string file_name, vector<data> &d){
         if(!open_file(file_name))
-            return 0;
-        while (fscanf(fp,"%c\n",&(d[i].c))!= EOF) {
-            i++;
+            return;
+        data dat;
+        while (fscanf(fp,"%c\n",&(dat.c))!= EOF) {
+            d.push_back(dat);
         }
         fclose(fp);
-        return i;
     }
-    size_t load_int_data(string file_name, data *d){
+    void load_int_data(string file_name, vector<data> &d){
         if(!open_file(file_name))
-            return 0;
-        size_t i = 0;
-        while (fscanf(fp,"%d\n",&(d[i].i))!= EOF) {
-            i++;
+            return;
+        data dat;
+        while (fscanf(fp,"%d\n",&(dat.i))!= EOF) {
+            d.push_back(dat);
         }
         fclose(fp);
-        return i;
     }
-    size_t load_double_data(string file_name, data *d){
+    void load_double_data(string file_name,vector<data> &d){
         if(!open_file(file_name))
-            return 0;
-        size_t i = 0;
-        while (fscanf(fp,"%lf\n",&(d[i].d))!= EOF) {
-            i++;
+            return;
+        data dat;
+        while (fscanf(fp,"%lf\n",&(dat.d))!= EOF) {
+            d.push_back(dat);
         }
         fclose(fp);
-        return i;
     }
 
 };
@@ -63,86 +61,82 @@ public:
 class statistical_lib {
 private:
     data_loader _data_loader;
-    data _data[100000];
+    vector<data> _data;
     int type;
 public:
     string data_set_name;
-    size_t length;
     statistical_lib(){
-        length = 0;
     }
     data sum(){
         data sum;
         return sum;
     }
+    bool is_empty(){
+        return _data.empty();
+    }
     void load_data(string file_name, int type){
         this->type = type,
-        this->data_set_name = file_name;
+        data_set_name = file_name;
+        _data.clear();
         switch(type){
         case TYPE_CHAR:
-            this->length = _data_loader.load_char_data(file_name,this->_data);
+            _data_loader.load_char_data(file_name,this->_data);
             break;
         case TYPE_INT:
-            this->length = _data_loader.load_int_data(file_name,this->_data);
+            _data_loader.load_int_data(file_name,this->_data);
             break;
         case TYPE_DOUBLE:
-            this->length = _data_loader.load_double_data(file_name,this->_data);
+            _data_loader.load_double_data(file_name,this->_data);
             break;
         default:
             cout<<"Invalid input!"<<endl;
             return;
         }
-        if(this->length > 0)
+        if(!_data.empty())
             cout<<"Data loaded from "<<file_name<<endl;
     }
     void print(){
-        switch(type){
-        case TYPE_CHAR:
-            for(size_t i = 0; i < length; i++){
-                cout<<_data[i].c<<endl;
+        for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
+            switch(type){
+            case TYPE_CHAR:
+                cout<<(*it).c<<endl;
+                break;
+            case TYPE_INT:
+                cout<<(*it).i<<endl;
+                break;
+            case TYPE_DOUBLE:
+                cout<<(*it).d<<endl;
+                break;
             }
-            break;
-        case TYPE_INT:
-            for(size_t i = 0; i < length; i++){
-                cout<<_data[i].i<<endl;
-            }
-            break;
-        case TYPE_DOUBLE:
-            for(size_t i = 0; i < length; i++){
-                cout<<_data[i].d<<endl;
-            }
-            break;
         }
+
     }
     double mean(){
         double mean = 0;
         double sum = 0;
-
-        switch(type){
+        size_t length = _data.size();
+        for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
+            switch(type){
             case TYPE_CHAR:
-                for (size_t i = 0; i< length; i++){
-                sum += _data[i].c;
-                }
-                mean = sum/length;
+                sum += (*it).c;
                 break;
             case TYPE_INT:
-                for (size_t i = 0; i< length; i++){
-                sum += _data[i].i;
-                }
-                mean = sum/length;
+                sum += (*it).i;
                 break;
             case TYPE_DOUBLE:
-                for (size_t i = 0; i< length; i++){
-                sum += _data[i].d;
-                }
-                mean = sum/length;
+                sum += (*it).d;
                 break;
+            }
         }
+        mean = sum/length;
         return mean;
     }
     double standard_deviation(){
         double standard_deviation = 0;
         return standard_deviation;
+    }
+    void histogram(){
+
     }
 };
 statistical_lib _statistical_lib;
@@ -172,6 +166,8 @@ public:
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 1. Load another data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 2. Print data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 3. Calculate mean"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 7. Visualize histogram"<<"|"<<endl;
+
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 0. Exit"<<"|"<<endl;
         cout<<"|"<<setw(70)<<setfill(' ')<<right<<"|"<<endl;
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
@@ -198,7 +194,7 @@ int main()
     data_loader f;
     while(running){
         p.print_title();
-        if(_statistical_lib.length <= 0){
+        if(_statistical_lib.is_empty()){
             p.print_main_menu_no_data();
             cin >> input;
             switch (input){
@@ -237,6 +233,9 @@ int main()
                 break;
             case 3:
                 cout << "Mean = "<< _statistical_lib.mean()<<endl;
+                break;
+            case 7:
+                _statistical_lib.histogram();
                 break;
             default:
                 cout<<"Invalid input"<<endl;
