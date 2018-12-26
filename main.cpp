@@ -4,10 +4,14 @@
 #include<string>
 #include<stdlib.h>
 #include<vector>
+#include<map>
+#include <windows.h>
+
 #include<iomanip>
 #define TYPE_CHAR 1
 #define TYPE_INT 2
 #define TYPE_DOUBLE 3
+
 
 using namespace std;
 union data{
@@ -15,7 +19,7 @@ union data{
     int i;
     double d;
 };
-
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 class data_loader {
 private:
     FILE* fp = NULL;
@@ -136,6 +140,41 @@ public:
         return standard_deviation;
     }
     void histogram(){
+        SetConsoleTextAttribute(hConsole, 27);
+        cout<<"\t\tGenerated Histogram:"<<endl;
+        SetConsoleTextAttribute(hConsole, 15);
+
+        switch(type){
+        case TYPE_CHAR:
+            map<char, int> frequency_table;
+            for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
+                frequency_table[(*it).c]++;
+            }
+            int max_num = 0;
+            for(map<char,int>::iterator it = frequency_table.begin(); it!=frequency_table.end(); ++it){
+                int length = (*it).second ;
+                if(length> max_num)
+                    max_num = length;
+                cout<<"\t"<<(*it).first <<" |";
+                for (int i = 0; i< length; i++){
+                    cout<<"* ";
+                }
+                cout<<endl;
+            }
+            cout<<"\t"<<"  "<<setw(max_num*3)<<setfill('-')<<""<<endl;
+
+            cout<<"\t"<<"   ";
+            for(int i = 1; i<= max_num; i++){
+                if(i>=10){
+                    cout<<i;
+                }
+                else
+                cout<<i<<" ";
+            }
+            cout<<endl;
+            break;
+        }
+
 
     }
 };
@@ -146,13 +185,17 @@ public:
     void print_title(){
         system("CLS");
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
+        SetConsoleTextAttribute(hConsole, 14);
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                     STATISTICAL LIBRARY"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                       Assignment 1"<<"|"<<endl;
+        SetConsoleTextAttribute(hConsole, 15);
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
         setfill(' ');
     }
     void print_main_menu_no_data(){
+        SetConsoleTextAttribute(hConsole, 12);
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"           There is no dataset loaded. Please load a data set."<<"|"<<endl;
+        SetConsoleTextAttribute(hConsole, 15);
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 1. Load a data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 0. Exit"<<"|"<<endl;
         cout<<"|"<<setw(70)<<setfill(' ')<<right<<"|"<<endl;
@@ -162,7 +205,9 @@ public:
 
     }
     void print_main_menu(){
+        SetConsoleTextAttribute(hConsole, 27);
         cout<<"|"<<setw(30)<<setfill(' ')<<left<<"           Loaded data set: "<<setw(39)<<left<<_statistical_lib.data_set_name<<"|"<<endl;
+        SetConsoleTextAttribute(hConsole, 15);
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 1. Load another data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 2. Print data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 3. Calculate mean"<<"|"<<endl;
@@ -187,6 +232,7 @@ public:
 
 int main()
 {
+    SetConsoleTextAttribute(hConsole, 15);
     bool running = true;
     int input = 0;
     string str_input = "";
@@ -235,7 +281,11 @@ int main()
                 cout << "Mean = "<< _statistical_lib.mean()<<endl;
                 break;
             case 7:
+
                 _statistical_lib.histogram();
+
+
+
                 break;
             default:
                 cout<<"Invalid input"<<endl;
