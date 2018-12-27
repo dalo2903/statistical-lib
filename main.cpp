@@ -12,7 +12,6 @@
 #define TYPE_INT 2
 #define TYPE_DOUBLE 3
 
-
 using namespace std;
 union data{
     char c;
@@ -143,27 +142,79 @@ public:
         SetConsoleTextAttribute(hConsole, 27);
         cout<<"\t\tGenerated Histogram:"<<endl;
         SetConsoleTextAttribute(hConsole, 15);
-
+        int max_num = 0;
+        map<char, int> frequency_table_char;
+        map<int, int> frequency_table_int;
+        map<double, int> frequency_table_double;
         switch(type){
         case TYPE_CHAR:
-            map<char, int> frequency_table;
             for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
-                frequency_table[(*it).c]++;
+                frequency_table_char[(*it).c]++;
             }
-            int max_num = 0;
-            for(map<char,int>::iterator it = frequency_table.begin(); it!=frequency_table.end(); ++it){
+            for(map<char,int>::iterator it = frequency_table_char.begin(); it!=frequency_table_char.end(); ++it){
                 int length = (*it).second ;
                 if(length> max_num)
                     max_num = length;
-                cout<<"\t"<<(*it).first <<" |";
+                cout<<"\t"<<(*it).first <<"\t|";
                 for (int i = 0; i< length; i++){
                     cout<<"* ";
                 }
                 cout<<endl;
             }
-            cout<<"\t"<<"  "<<setw(max_num*3)<<setfill('-')<<""<<endl;
+            cout<<"\t"<<"\t"<<setw(max_num*3)<<setfill('-')<<""<<endl;
+            cout<<"\t"<<"\t ";
+            for(int i = 1; i<= max_num; i++){
+                if(i>=10){
+                    cout<<i;
+                }
+                else
+                cout<<i<<" ";
+            }
+            cout<<endl;
+            break;
+        case TYPE_INT:
+            for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
+                frequency_table_int[(*it).i]++;
+            }
+            for(map<int,int>::iterator it = frequency_table_int.begin(); it!=frequency_table_int.end(); ++it){
+                int length = (*it).second ;
+                if(length> max_num)
+                    max_num = length;
+                cout<<"\t"<<(*it).first <<"\t|";
+                for (int i = 0; i< length; i++){
+                    cout<<"* ";
+                }
+                cout<<endl;
+            }
+            cout<<"\t"<<"\t"<<setw(max_num*3)<<setfill('-')<<""<<endl;
 
-            cout<<"\t"<<"   ";
+            cout<<"\t"<<"\t ";
+            for(int i = 1; i<= max_num; i++){
+                if(i>=10){
+                    cout<<i;
+                }
+                else
+                cout<<i<<" ";
+            }
+            cout<<endl;
+            break;
+        case TYPE_DOUBLE:
+            for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
+                frequency_table_double[(*it).d]++;
+            }
+            for(map<double,int>::iterator it = frequency_table_double.begin(); it!=frequency_table_double.end(); ++it){
+                int length = (*it).second ;
+                if(length> max_num)
+                    max_num = length;
+                cout<<"\t"<<(*it).first <<"\t|";
+                for (int i = 0; i< length; i++){
+                    cout<<"* ";
+                }
+                cout<<endl;
+            }
+            cout<<"\t"<<"\t"<<setw(max_num*3)<<setfill('-')<<""<<endl;
+
+            cout<<"\t"<<"\t ";
             for(int i = 1; i<= max_num; i++){
                 if(i>=10){
                     cout<<i;
@@ -185,17 +236,30 @@ public:
     void print_title(){
         system("CLS");
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
+        cout<<"|";
         SetConsoleTextAttribute(hConsole, 14);
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                     STATISTICAL LIBRARY"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                       Assignment 1"<<"|"<<endl;
+        cout<<setw(69)<<setfill(' ')<<left<<"                     STATISTICAL LIBRARY";
         SetConsoleTextAttribute(hConsole, 15);
+        cout<<"|"<<endl;
+        cout<<"|";
+        SetConsoleTextAttribute(hConsole, 11);
+        cout<<setw(69)<<setfill(' ')<<left<<"                         Assignment 1";
+        SetConsoleTextAttribute(hConsole, 15);
+        cout<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Students       ID          "<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
+
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
         setfill(' ');
     }
     void print_main_menu_no_data(){
+        cout<<"|";
         SetConsoleTextAttribute(hConsole, 12);
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"           There is no dataset loaded. Please load a data set."<<"|"<<endl;
+        cout<<setw(69)<<setfill(' ')<<left<<"           There is no dataset loaded. Please load a data set.";
         SetConsoleTextAttribute(hConsole, 15);
+        cout<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 1. Load a data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 0. Exit"<<"|"<<endl;
         cout<<"|"<<setw(70)<<setfill(' ')<<right<<"|"<<endl;
@@ -205,9 +269,11 @@ public:
 
     }
     void print_main_menu(){
+        cout<<"|";
         SetConsoleTextAttribute(hConsole, 27);
-        cout<<"|"<<setw(30)<<setfill(' ')<<left<<"           Loaded data set: "<<setw(39)<<left<<_statistical_lib.data_set_name<<"|"<<endl;
+        cout<<setw(30)<<setfill(' ')<<left<<"           Loaded data set: "<<setw(39)<<left<<_statistical_lib.data_set_name;
         SetConsoleTextAttribute(hConsole, 15);
+        cout<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 1. Load another data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 2. Print data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 3. Calculate mean"<<"|"<<endl;
