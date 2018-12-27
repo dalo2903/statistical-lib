@@ -5,9 +5,10 @@
 #include<stdlib.h>
 #include<vector>
 #include<map>
-#include <windows.h>
-
+#include<windows.h>
+#include<math.h>
 #include<iomanip>
+
 #define TYPE_CHAR 1
 #define TYPE_INT 2
 #define TYPE_DOUBLE 3
@@ -19,6 +20,7 @@ union data{
     double d;
 };
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
 class data_loader {
 private:
     FILE* fp = NULL;
@@ -91,9 +93,6 @@ public:
         case TYPE_DOUBLE:
             _data_loader.load_double_data(file_name,this->_data);
             break;
-        default:
-            cout<<"Invalid input!"<<endl;
-            return;
         }
         if(!_data.empty())
             cout<<"Data loaded from "<<file_name<<endl;
@@ -112,7 +111,6 @@ public:
                 break;
             }
         }
-
     }
     double mean(){
         double mean = 0;
@@ -136,6 +134,42 @@ public:
     }
     double standard_deviation(){
         double standard_deviation = 0;
+        double _mean = mean();
+        size_t length = _data.size();
+        for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
+            switch(type){
+            case TYPE_CHAR:
+                standard_deviation += ((double)((*it).c) - _mean)*((double)((*it).c) - _mean);
+                break;
+            case TYPE_INT:
+                standard_deviation += ((double)((*it).i) - _mean)*((double)((*it).i) - _mean);
+                break;
+            case TYPE_DOUBLE:
+                standard_deviation += ((double)((*it).d) - _mean)*((double)((*it).d) - _mean);
+                break;
+            }
+        }
+        standard_deviation = sqrt(standard_deviation/length);
+        return standard_deviation;
+    }
+    double variance(){
+        double standard_deviation = 0;
+        double _mean = mean();
+        size_t length = _data.size();
+        for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
+            switch(type){
+            case TYPE_CHAR:
+                standard_deviation += ((double)((*it).c) - _mean)*((double)((*it).c) - _mean);
+                break;
+            case TYPE_INT:
+                standard_deviation += ((double)((*it).i) - _mean)*((double)((*it).i) - _mean);
+                break;
+            case TYPE_DOUBLE:
+                standard_deviation += ((double)((*it).d) - _mean)*((double)((*it).d) - _mean);
+                break;
+            }
+        }
+        standard_deviation = standard_deviation/length;
         return standard_deviation;
     }
     void histogram(){
@@ -276,9 +310,13 @@ public:
         cout<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 1. Load another data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 2. Print data set"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 3. Calculate mean"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 7. Visualize histogram"<<"|"<<endl;
-
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 3. Calculate Mean"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 4. Calculate Standard Deviation"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 5. Calculate Variance"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 6. Calculate Q1, Median and Q3"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 7. Calculate mode"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 8. Visualize histogram"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 9. Visualize noise"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 0. Exit"<<"|"<<endl;
         cout<<"|"<<setw(70)<<setfill(' ')<<right<<"|"<<endl;
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
@@ -286,10 +324,12 @@ public:
     }
     void print_load_data_menu(){
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                  Please choose type of data:"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                  1. char"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                  2. int"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                  3. double"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                   Please choose type of data:"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                   1. char"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                   2. int"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                   3. double"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                   0. Exit"<<"|"<<endl;
+
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
         cout<<"Selection: ";
 
@@ -316,12 +356,23 @@ int main()
             case 1:
                 p.print_load_data_menu();
                 cin >> input;
+                switch(input){
+                default:
+                    SetConsoleTextAttribute(hConsole, 12);
+                    cout<<"Invalid input"<<endl;
+                    SetConsoleTextAttribute(hConsole, 15);
+                    break;
+                }
+                if(input == 0)
+                    break;
                 cout<<"Enter file name: ";
                 cin >> str_input;
                 _statistical_lib.load_data(str_input,input);
                 break;
             default:
-                cout<<"Invalid input!"<<endl;
+                SetConsoleTextAttribute(hConsole, 12);
+                cout<<"Invalid input"<<endl;
+                SetConsoleTextAttribute(hConsole, 15);
                 break;
 
             }
@@ -344,21 +395,27 @@ int main()
                 _statistical_lib.print();
                 break;
             case 3:
-                cout << "Mean = "<< _statistical_lib.mean()<<endl;
+                cout << "Mean = "<<setprecision(10)<< _statistical_lib.mean()<<endl;
+                break;
+            case 4:
+                cout << "Standard deviation = "<<setprecision(10)<< _statistical_lib.standard_deviation()<<endl;
+                break;
+            case 5:
+                cout << "Variance = "<<setprecision(10)<<_statistical_lib.variance()<<endl;
+                break;
+            case 6:
                 break;
             case 7:
-
+                break;
+            case 8:
                 _statistical_lib.histogram();
-
-
-
                 break;
             default:
+                SetConsoleTextAttribute(hConsole, 12);
                 cout<<"Invalid input"<<endl;
+                SetConsoleTextAttribute(hConsole, 15);
                 break;
             }
-
-
         }
         fflush(stdin);
         system("PAUSE");
