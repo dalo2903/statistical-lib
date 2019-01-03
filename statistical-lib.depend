@@ -11,3 +11,16 @@
 	<math.h>
 	<iomanip>
 
+1546499823 source:c:\users\csss\documents\github\statistical-lib\main.cpp
+	<iostream>
+	<sstream>
+	<stdio.h>
+	<string>
+	<stdlib.h>
+	<vector>
+	<map>
+	<windows.h>
+	<math.h>
+	<iomanip>
+	<algorithm>
+
