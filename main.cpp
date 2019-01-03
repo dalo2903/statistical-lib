@@ -93,6 +93,11 @@ public:
         case TYPE_DOUBLE:
             _data_loader.load_double_data(file_name,this->_data);
             break;
+        default:
+            SetConsoleTextAttribute(hConsole, 12);
+            cout<<"Invalid input"<<endl;
+            SetConsoleTextAttribute(hConsole, 15);
+            return;
         }
         if(!_data.empty())
             cout<<"Data loaded from "<<file_name<<endl;
@@ -356,13 +361,6 @@ int main()
             case 1:
                 p.print_load_data_menu();
                 cin >> input;
-                switch(input){
-                default:
-                    SetConsoleTextAttribute(hConsole, 12);
-                    cout<<"Invalid input"<<endl;
-                    SetConsoleTextAttribute(hConsole, 15);
-                    break;
-                }
                 if(input == 0)
                     break;
                 cout<<"Enter file name: ";
