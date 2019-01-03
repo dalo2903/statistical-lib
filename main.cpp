@@ -72,15 +72,11 @@ public:
     string data_set_name;
     statistical_lib(){
     }
-    data sum(){
-        data sum;
-        return sum;
-    }
     bool is_empty(){
         return _data.empty();
     }
     void load_data(string file_name, int type){
-        this->type = type,
+         this->type = type,
         data_set_name = file_name;
         _data.clear();
         switch(type){
@@ -117,6 +113,25 @@ public:
             }
         }
     }
+    double sum(){
+        double sum = 0;
+        size_t length = _data.size();
+        for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
+            switch(type){
+            case TYPE_CHAR:
+                sum += (*it).c;
+                break;
+            case TYPE_INT:
+                sum += (*it).i;
+                break;
+            case TYPE_DOUBLE:
+                sum += (*it).d;
+                break;
+            }
+        }
+        return sum;
+    }
+
     double mean(){
         double mean = 0;
         double sum = 0;
@@ -269,7 +284,6 @@ public:
     }
 };
 statistical_lib _statistical_lib;
-
 class menu_printer{
 public:
     void print_title(){
@@ -313,15 +327,16 @@ public:
         cout<<setw(30)<<setfill(' ')<<left<<"           Loaded data set: "<<setw(39)<<left<<_statistical_lib.data_set_name;
         SetConsoleTextAttribute(hConsole, 15);
         cout<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 1. Load another data set"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 2. Print data set"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 3. Calculate Mean"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 4. Calculate Standard Deviation"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 5. Calculate Variance"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 6. Calculate Q1, Median and Q3"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 7. Calculate mode"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 8. Visualize histogram"<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 9. Visualize noise"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 1. Calculate Sum"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 2. Calculate Mean"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 3. Calculate Standard Deviation"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 4. Calculate Variance"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 5. Calculate Q1, Median and Q3"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 6. Calculate mode"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 7. Visualize histogram"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 8. Visualize noise"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 9. Load another data set"<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 10. Print data set"<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<left<<"                 0. Exit"<<"|"<<endl;
         cout<<"|"<<setw(70)<<setfill(' ')<<right<<"|"<<endl;
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
@@ -382,31 +397,35 @@ int main()
             case 0:
                 running = false;
                 break;
+
             case 1:
+                cout << "Sum = "<<setprecision(10)<< _statistical_lib.sum()<<endl;
+                break;
+            case 2:
+                cout << "Mean = "<<setprecision(10)<< _statistical_lib.mean()<<endl;
+                break;
+            case 3:
+                cout << "Standard deviation = "<<setprecision(10)<< _statistical_lib.standard_deviation()<<endl;
+                break;
+            case 4:
+                cout << "Variance = "<<setprecision(10)<<_statistical_lib.variance()<<endl;
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                _statistical_lib.histogram();
+                break;
+              case 9:
                 p.print_load_data_menu();
                 cin >> input;
                 cout<<"Enter file name: ";
                 cin >> str_input;
                 _statistical_lib.load_data(str_input,input);
                 break;
-            case 2:
+            case 10:
                 _statistical_lib.print();
-                break;
-            case 3:
-                cout << "Mean = "<<setprecision(10)<< _statistical_lib.mean()<<endl;
-                break;
-            case 4:
-                cout << "Standard deviation = "<<setprecision(10)<< _statistical_lib.standard_deviation()<<endl;
-                break;
-            case 5:
-                cout << "Variance = "<<setprecision(10)<<_statistical_lib.variance()<<endl;
-                break;
-            case 6:
-                break;
-            case 7:
-                break;
-            case 8:
-                _statistical_lib.histogram();
                 break;
             default:
                 SetConsoleTextAttribute(hConsole, 12);
