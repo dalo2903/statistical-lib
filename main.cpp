@@ -75,8 +75,8 @@ class statistical_lib {
 private:
     data_loader _data_loader;
     vector<data> _data;
-    int type;
 public:
+    int type;
     string data_set_name;
     statistical_lib(){
     }
@@ -90,11 +90,14 @@ public:
         switch(type){
         case TYPE_CHAR:
             _data_loader.load_char_data(file_name,this->_data);
+            sort(this->_data.begin(), this->_data.end(),compare_char);
             break;
         case TYPE_INT:
             _data_loader.load_int_data(file_name,this->_data);
+            sort(this->_data.begin(), this->_data.end(), compare_int);
             break;
         case TYPE_DOUBLE:
+            sort(this->_data.begin(), this->_data.end(), compare_double);
             _data_loader.load_double_data(file_name,this->_data);
             break;
         default:
@@ -111,13 +114,13 @@ public:
         for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
             switch(type){
             case TYPE_CHAR:
-                cout<<(*it).c<<endl;
+                cout<<(*it).c<<"\t";
                 break;
             case TYPE_INT:
-                cout<<(*it).i<<endl;
+                cout<<(*it).i<<"\t";
                 break;
             case TYPE_DOUBLE:
-                cout<<(*it).d<<endl;
+                cout<<(*it).d<<"\t";
                 break;
             }
         }
@@ -289,46 +292,19 @@ public:
         }
     }
     double median(){
-        vector<data> _data_temp = _data;
         double median = 0;
-        switch (type) {
-             case TYPE_CHAR:
-                sort(_data_temp.begin(), _data_temp.end(),compare_char);
-                break;
-            case TYPE_INT:
-                sort(_data_temp.begin(), _data_temp.end(), compare_int);
-                break;
-            case TYPE_DOUBLE:
-                sort(_data_temp.begin(), _data_temp.end(), compare_double);
-                break;
-        }
-        cout<<"Sorted data:"<<endl;
-        for(vector<data>::iterator it = _data_temp.begin(); it != _data_temp.end(); ++it){
-            switch(type){
-            case TYPE_CHAR:
-                cout<<(*it).c<<"\t";
-                break;
-            case TYPE_INT:
-                cout<<(*it).i<<"\t";
-                break;
-            case TYPE_DOUBLE:
-                cout<<(*it).d<<"\t";
-                break;
-            }
-        }
-        cout<<endl;
-        int length = _data_temp.size();
+        int length = _data.size();
         if (length%2!=0) {
             int index = (length + 1)/2;
             switch (type) {
-             case TYPE_CHAR:
-                median = _data_temp.at(index-1).c;
+            case TYPE_CHAR:
+                median = _data.at(index-1).c;
                 break;
             case TYPE_INT:
-                median = _data_temp.at(index-1).i;
+                median = _data.at(index-1).i;
                 break;
             case TYPE_DOUBLE:
-                median = _data_temp.at(index-1).d;
+                median = _data.at(index-1).d;
                 break;
             }
         }
@@ -336,48 +312,21 @@ public:
             int index = length/2;
             switch (type) {
              case TYPE_CHAR:
-                median = (double)(_data_temp.at(index-1).c + _data_temp.at(index).c)/2;
+                median = (double)(_data.at(index-1).c + _data.at(index).c)/2;
                 break;
             case TYPE_INT:
-                median = (double)(_data_temp.at(index-1).i + _data_temp.at(index).i)/2;
+                median = (double)(_data.at(index-1).i + _data.at(index).i)/2;
                 break;
             case TYPE_DOUBLE:
-                median = (double)(_data_temp.at(index-1).d + _data_temp.at(index).d)/2;
+                median = (double)(_data.at(index-1).d + _data.at(index).d)/2;
                 break;
             }
         }
         return median;
     }
-    double Q1 () {
-        vector<data> _data_temp = _data;
+    double Q1(){
         double Q1 = 0;
-        switch (type) {
-             case TYPE_CHAR:
-                sort(_data_temp.begin(), _data_temp.end(),compare_char);
-                break;
-            case TYPE_INT:
-                sort(_data_temp.begin(), _data_temp.end(), compare_int);
-                break;
-            case TYPE_DOUBLE:
-                sort(_data_temp.begin(), _data_temp.end(), compare_double);
-                break;
-        }
-        cout<<"Sorted data:"<<endl;
-        for(vector<data>::iterator it = _data_temp.begin(); it != _data_temp.end(); ++it){
-            switch(type){
-            case TYPE_CHAR:
-                cout<<(*it).c<<"\t";
-                break;
-            case TYPE_INT:
-                cout<<(*it).i<<"\t";
-                break;
-            case TYPE_DOUBLE:
-                cout<<(*it).d<<"\t";
-                break;
-            }
-        }
-        cout<<endl;
-        int length = _data_temp.size();
+        int length = _data.size();
         int ele ;
         if (length%2!=0) {
             ele = (length -1)/2;
@@ -389,13 +338,13 @@ public:
             int index = (ele + 1)/2;
             switch (type) {
              case TYPE_CHAR:
-                Q1 = _data_temp.at(index-1).c;
+                Q1 = _data.at(index-1).c;
                 break;
             case TYPE_INT:
-                Q1 = _data_temp.at(index-1).i;
+                Q1 = _data.at(index-1).i;
                 break;
             case TYPE_DOUBLE:
-                Q1 = _data_temp.at(index-1).d;
+                Q1 = _data.at(index-1).d;
                 break;
             }
         }
@@ -403,48 +352,21 @@ public:
             int index = ele/2;
             switch (type) {
              case TYPE_CHAR:
-                Q1 = (double)(_data_temp.at(index-1).c + _data_temp.at(index).c)/2;
+                Q1 = (double)(_data.at(index-1).c + _data.at(index).c)/2;
                 break;
             case TYPE_INT:
-                Q1 = (double)(_data_temp.at(index-1).i + _data_temp.at(index).i)/2;
+                Q1 = (double)(_data.at(index-1).i + _data.at(index).i)/2;
                 break;
             case TYPE_DOUBLE:
-                Q1 = (double)(_data_temp.at(index-1).d + _data_temp.at(index).d)/2;
+                Q1 = (double)(_data.at(index-1).d + _data.at(index).d)/2;
                 break;
             }
         }
         return Q1;
     }
-    double Q3 (){
-        vector<data> _data_temp = _data;
+    double Q3(){
         double Q3 = 0;
-        switch (type) {
-             case TYPE_CHAR:
-                sort(_data_temp.begin(), _data_temp.end(),compare_char);
-                break;
-            case TYPE_INT:
-                sort(_data_temp.begin(), _data_temp.end(), compare_int);
-                break;
-            case TYPE_DOUBLE:
-                sort(_data_temp.begin(), _data_temp.end(), compare_double);
-                break;
-        }
-        cout<<"Sorted data:"<<endl;
-        for(vector<data>::iterator it = _data_temp.begin(); it != _data_temp.end(); ++it){
-            switch(type){
-            case TYPE_CHAR:
-                cout<<(*it).c<<"\t";
-                break;
-            case TYPE_INT:
-                cout<<(*it).i<<"\t";
-                break;
-            case TYPE_DOUBLE:
-                cout<<(*it).d<<"\t";
-                break;
-            }
-        }
-        cout<<endl;
-        int length = _data_temp.size();
+        int length = _data.size();
         int ele ;
         if (length%2!=0) {
             ele = (length -1)/2;
@@ -456,13 +378,13 @@ public:
             int index = (ele + 1)/2 + ele +1;
             switch (type) {
              case TYPE_CHAR:
-                Q3 = _data_temp.at(index-1).c;
+                Q3 = _data.at(index-1).c;
                 break;
             case TYPE_INT:
-                Q3 = _data_temp.at(index-1).i;
+                Q3 = _data.at(index-1).i;
                 break;
             case TYPE_DOUBLE:
-                Q3 = _data_temp.at(index-1).d;
+                Q3 = _data.at(index-1).d;
                 break;
             }
         }
@@ -470,20 +392,20 @@ public:
             int index = ele/2  + ele ;
             switch (type) {
              case TYPE_CHAR:
-                Q3 = (double)(_data_temp.at(index-1).c + _data_temp.at(index).c)/2;
+                Q3 = (double)(_data.at(index-1).c + _data.at(index).c)/2;
                 break;
             case TYPE_INT:
-                Q3 = (double)(_data_temp.at(index-1).i + _data_temp.at(index).i)/2;
+                Q3 = (double)(_data.at(index-1).i + _data.at(index).i)/2;
                 break;
             case TYPE_DOUBLE:
-                Q3 = (double)(_data_temp.at(index-1).d + _data_temp.at(index).d)/2;
+                Q3 = (double)(_data.at(index-1).d + _data.at(index).d)/2;
                 break;
             }
         }
         return Q3;
     }
-    double mode ()
-    {
+    vector<double> mode (){
+        vector<double> results;
         map<char, int> frequency_table_char;
         map<int, int> frequency_table_int;
         map<double, int> frequency_table_double;
@@ -499,7 +421,7 @@ public:
             }
             for(map<char,int>::iterator it = frequency_table_char.begin(); it!=frequency_table_char.end(); ++it){
                 if(_max == (*it).second)
-                    cout << (*it).first <<"("<<_max <<" times)";
+                    results.push_back((*it).first);
             }
             break;
         case TYPE_INT:
@@ -507,19 +429,62 @@ public:
                 frequency_table_int[(*it).i]++;
             }
             for(map<int,int>::iterator it = frequency_table_int.begin(); it!=frequency_table_int.end(); ++it){
-
+                if(_max < (*it).second) _max = (*it).second;
             }
-
+            for(map<int,int>::iterator it = frequency_table_int.begin(); it!=frequency_table_int.end(); ++it){
+                if(_max == (*it).second)
+                    results.push_back((*it).first);
+            }
             break;
         case TYPE_DOUBLE:
             for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
                 frequency_table_double[(*it).d]++;
             }
             for(map<double,int>::iterator it = frequency_table_double.begin(); it!=frequency_table_double.end(); ++it){
-
+                if(_max < (*it).second) _max = (*it).second;
+            }
+            for(map<double,int>::iterator it = frequency_table_double.begin(); it!=frequency_table_double.end(); ++it){
+                if(_max == (*it).second)
+                    results.push_back((*it).first);
             }
             break;
         }
+        return results;
+    }
+    void noise(){
+        double standard_deviation = this->standard_deviation();
+        double mean = this->mean();
+        double z_score = 0;
+        for(vector<data>::iterator it = _data.begin(); it != _data.end(); ){
+            switch(type){
+            case TYPE_CHAR:
+                z_score = (double)((*it).c - mean )/ standard_deviation;
+                if(z_score > 3){
+                    cout<<(*it).c<<"IS NOISE";
+                    it = _data.erase(it);
+                }
+                else ++it;
+                break;
+            case TYPE_INT:
+                z_score = (double)((*it).i - mean )/ standard_deviation;
+                if(z_score > 3){
+                    cout<<(*it).i<<"IS NOISE";
+                    it = _data.erase(it);
+                }
+                else ++it;
+                break;
+            case TYPE_DOUBLE:
+                z_score = (double)((*it).d - mean )/ standard_deviation;
+                if(z_score > 3){
+                    cout<<(*it).d<<"IS NOISE";
+                    it = _data.erase(it);
+                }
+                else ++it;
+                break;
+            }
+        }
+        cout<<"Data after noise reduction: "<<endl;
+        histogram();
     }
 };
 statistical_lib _statistical_lib;
@@ -654,16 +619,37 @@ int main()
                 cout << "Q1 = "<<setprecision(10)<<_statistical_lib.Q1()<<endl;
                 cout << "Median = "<<setprecision(10)<<_statistical_lib.median()<<endl;
                 cout << "Q3 = "<<setprecision(10)<<_statistical_lib.Q3()<<endl;
-
+                cout << endl;
                 break;
-            case 6:
-                cout << "Mode = "<<setprecision(10);
-                _statistical_lib.mode();
+            case 6:{
+                vector<double> results;
+                results = _statistical_lib.mode();
+                cout << "Mode = ";
+                for(vector<double>::iterator it = results.begin(); it != results.end(); ++it){
+                    switch(_statistical_lib.type){
+                    case TYPE_CHAR:
+                        cout<< (char)(*it);
+                        break;
+                    case TYPE_INT:
+                        cout<< (*it);
+                        break;
+                    case TYPE_DOUBLE:
+                        cout<< (*it);
+                        break;
+                    }
+                    if(it!= results.end() - 1)
+                        cout<<", ";
+                }
+                cout<<endl;
                 break;
+            }
             case 7:
                 _statistical_lib.histogram();
                 break;
-              case 9:
+            case 8:
+                _statistical_lib.noise();
+                break;
+            case 9:
                 p.print_load_data_menu();
                 cin >> input;
                 cout<<"Enter file name: ";
