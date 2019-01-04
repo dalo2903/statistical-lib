@@ -647,9 +647,9 @@ int main()
                 break;
             case 8:{
                 double input_double;
-                cout<<"Noise is detecting using z-score method. Please enter the threshold (usually from 0~3):
+                cout<<"Noise is detecting using z-score method. Please enter the threshold (usually from 0~3): " ;
                 cin>>input_double;
-                _statistical_lib.noise(input_double);
+                _statistical_lib.noise_reduction(input_double);
                 break;
             }
             case 9:

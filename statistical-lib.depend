@@ -1,1 +1,14 @@
 # depslib dependency file v1.0
+1546575943 source:c:\users\csss\documents\github\statistical-lib\main.cpp
+	<iostream>
+	<sstream>
+	<stdio.h>
+	<string>
+	<stdlib.h>
+	<vector>
+	<map>
+	<windows.h>
+	<math.h>
+	<iomanip>
+	<algorithm>
+
