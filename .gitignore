@@ -5,3 +5,4 @@
 *.tmp
 report/~$report.docx
 statistical-lib.depend
+*.depend
