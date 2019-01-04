@@ -142,7 +142,6 @@ public:
         }
         return sum;
     }
-
     double mean(){
         double mean = 0;
         double sum = 0;
@@ -184,24 +183,24 @@ public:
         return standard_deviation;
     }
     double variance(){
-        double standard_deviation = 0;
+        double variance  = 0;
         double _mean = mean();
         size_t length = _data.size();
         for(vector<data>::iterator it = _data.begin(); it != _data.end(); ++it){
             switch(type){
             case TYPE_CHAR:
-                standard_deviation += ((double)((*it).c) - _mean)*((double)((*it).c) - _mean);
+                variance  += ((double)((*it).c) - _mean)*((double)((*it).c) - _mean);
                 break;
             case TYPE_INT:
-                standard_deviation += ((double)((*it).i) - _mean)*((double)((*it).i) - _mean);
+                variance  += ((double)((*it).i) - _mean)*((double)((*it).i) - _mean);
                 break;
             case TYPE_DOUBLE:
-                standard_deviation += ((double)((*it).d) - _mean)*((double)((*it).d) - _mean);
+                variance  += ((double)((*it).d) - _mean)*((double)((*it).d) - _mean);
                 break;
             }
         }
-        standard_deviation = standard_deviation/length;
-        return standard_deviation;
+        variance  = variance /length;
+        return variance ;
     }
     void histogram(){
         SetConsoleTextAttribute(hConsole, 27);
@@ -451,7 +450,7 @@ public:
         }
         return results;
     }
-    void noise(){
+    void noise_reduction(double threshold){
         double standard_deviation = this->standard_deviation();
         double mean = this->mean();
         double z_score = 0;
@@ -459,24 +458,24 @@ public:
             switch(type){
             case TYPE_CHAR:
                 z_score = (double)((*it).c - mean )/ standard_deviation;
-                if(z_score > 3){
-                    cout<<(*it).c<<"IS NOISE";
+                if(z_score > threshold){
+                    cout<<"Noise detected :"<<(*it).c;
                     it = _data.erase(it);
                 }
                 else ++it;
                 break;
             case TYPE_INT:
                 z_score = (double)((*it).i - mean )/ standard_deviation;
-                if(z_score > 3){
-                    cout<<(*it).i<<"IS NOISE";
+                if(z_score > threshold){
+                    cout<<"Noise detected :"<<(*it).i;
                     it = _data.erase(it);
                 }
                 else ++it;
                 break;
             case TYPE_DOUBLE:
                 z_score = (double)((*it).d - mean )/ standard_deviation;
-                if(z_score > 3){
-                    cout<<(*it).d<<"IS NOISE";
+                if(z_score > threshold){
+                    cout<<"Noise detected :"<<(*it).d;
                     it = _data.erase(it);
                 }
                 else ++it;
@@ -507,7 +506,7 @@ public:
         cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Students       ID          "<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Cu Huy Chien  1752109        "<<"|"<<endl;
 
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
         setfill(' ');
@@ -646,9 +645,13 @@ int main()
             case 7:
                 _statistical_lib.histogram();
                 break;
-            case 8:
-                _statistical_lib.noise();
+            case 8:{
+                double input_double;
+                cout<<"Noise is detecting using z-score method. Please enter the threshold (usually from 0~3):
+                cin>>input_double;
+                _statistical_lib.noise(input_double);
                 break;
+            }
             case 9:
                 p.print_load_data_menu();
                 cin >> input;
