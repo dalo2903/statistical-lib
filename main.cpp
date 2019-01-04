@@ -505,9 +505,9 @@ public:
         SetConsoleTextAttribute(hConsole, 15);
         cout<<"|"<<endl;
         cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Students       ID          "<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
-        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha  1411675        "<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Dinh Duy Kha      1411675        "<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Nguyen Xuan Danh  1652736        "<<"|"<<endl;
+        cout<<"|"<<setw(69)<<setfill(' ')<<right<<"Cu Huy Chien      1111111        "<<"|"<<endl;
 
         cout<<"+"<<setw(70)<<setfill('-')<<right<<"+"<<endl;
         setfill(' ');
